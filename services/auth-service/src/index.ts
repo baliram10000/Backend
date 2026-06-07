@@ -17,8 +17,8 @@ function getTransporter() {
     
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.SMTP_PORT || '587'),
-      secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+      port: parseInt(process.env.SMTP_PORT || '465'), // Default to 465 (secure)
+      secure: process.env.SMTP_SECURE !== 'false', // Default to true for 465
       auth: {
         user: process.env.SMTP_USER || '',
         pass: process.env.SMTP_PASS || '',
@@ -26,9 +26,10 @@ function getTransporter() {
       tls: {
         rejectUnauthorized: false
       },
-      connectionTimeout: 5000,
-      greetingTimeout: 5000,
-      socketTimeout: 5000,
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
+      family: 4 // FORCE IPv4 to fix Render's ENETUNREACH IPv6 error
     });
   }
   return transporter;
