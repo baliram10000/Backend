@@ -59,9 +59,11 @@ async function sendOtpEmail(email: string, otp: string) {
   try {
     await getTransporter().sendMail(mailOptions);
     console.log(`SMTP OTP email sent successfully to ${email}`);
+    return true;
   } catch (error) {
     console.error(`Failed to send SMTP email to ${email}:`, error);
     console.log(`\x1b[31m[SMTP Error Fallback] OTP for ${email} is ${otp}\x1b[0m`);
+    return false;
   }
 }
 
@@ -103,11 +105,11 @@ router.post('/send-otp', async (req: Request, res: Response) => {
     expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes expiration
   });
 
-  await sendOtpEmail(normalizedEmail, otp);
+  const emailSent = await sendOtpEmail(normalizedEmail, otp);
 
   // Return a mock OTP to the client in fallback mode for easy offline testing/scraping
   const responsePayload: any = { message: 'OTP sent successfully to your email' };
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !emailSent) {
     responsePayload.mockOtp = otp;
   }
   
@@ -151,10 +153,10 @@ router.post('/register', async (req: Request, res: Response) => {
       expiresAt: Date.now() + 5 * 60 * 1000, // 5 minutes
     });
 
-    await sendOtpEmail(normalizedEmail, otp);
+    const emailSent = await sendOtpEmail(normalizedEmail, otp);
 
     const responsePayload: any = { message: 'Registration OTP sent successfully to your email' };
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASS || !emailSent) {
       responsePayload.mockOtp = otp;
     }
 
