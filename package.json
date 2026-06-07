@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "start": "node services/api-gateway/dist/index.js",
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w @wow/shared && npm run build -w @wow/auth-service && npm run build -w @wow/catalog-service && npm run build -w @wow/order-service && npm run build -w @wow/api-gateway",
     "dev": "concurrently \"npm run dev -w @wow/shared\" \"npm run dev -w @wow/auth-service\" \"npm run dev -w @wow/catalog-service\" \"npm run dev -w @wow/order-service\" \"npm run dev -w @wow/api-gateway\""
   },
   "devDependencies": {
