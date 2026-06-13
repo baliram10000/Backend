@@ -53,6 +53,14 @@ const startServer = async () => {
 
     app.listen(PORT, '0.0.0.0', () => {
       console.log(`🚀 API Gateway (Modular Monolith) running on port ${PORT} (all interfaces)`);
+      
+      // Start Keep-Alive Ping for Render Free Tier (Pings every 4 minutes)
+      const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL || 'https://backend-5r04.onrender.com';
+      setInterval(() => {
+        fetch(`${RENDER_EXTERNAL_URL}/api/health`)
+          .then(() => console.log(`[Keep-Alive] Pinged ${RENDER_EXTERNAL_URL}/api/health successfully`))
+          .catch((err) => console.error(`[Keep-Alive] Ping failed:`, err.message));
+      }, 4 * 60 * 1000);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

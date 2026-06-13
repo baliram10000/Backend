@@ -30,7 +30,7 @@ function getTransporter() {
       greetingTimeout: 10000,
       socketTimeout: 10000,
       family: 4 // FORCE IPv4 to fix Render's ENETUNREACH IPv6 error
-    });
+    } as any);
   }
   return transporter;
 }
