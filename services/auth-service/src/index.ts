@@ -26,9 +26,9 @@ function getTransporter() {
       tls: {
         rejectUnauthorized: false
       },
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
+      connectionTimeout: 3000,
+      greetingTimeout: 3000,
+      socketTimeout: 3000,
       family: 4 // FORCE IPv4 to fix Render's ENETUNREACH IPv6 error
     } as any);
   }
